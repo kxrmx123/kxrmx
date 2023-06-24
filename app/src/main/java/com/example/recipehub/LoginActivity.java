@@ -1,91 +1,138 @@
 package com.example.recipehub;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.example.recipehub.model.ErrorResponse;
+import com.example.recipehub.model.User;
+import com.example.recipehub.remote.ApiUtils;
+import com.example.recipehub.remote.UserService;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText editTextEmail;
-    private EditText editTextPassword;
-    private Button loginButton;
+    EditText edtUsername; //email or username is allowed
+    EditText edtPassword;
+    Button btnLogin;
+
+    UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPassword = findViewById(R.id.editTextPassword);
-        loginButton = findViewById(R.id.login_button);
+        // get references to form elements
+        edtUsername = findViewById(R.id.editTextEmail); //email or username is allowed
+        edtPassword = findViewById(R.id.editTextPassword);
+        btnLogin = findViewById(R.id.login_button);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        // get UserService instance
+        userService = ApiUtils.getUserService();
+
+        // set onClick action to btnLogin
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                login();
+            public void onClick(View view) {
+                // get username and password entered by user
+                String username = edtUsername.getText().toString();
+                String password = edtPassword.getText().toString();
+
+                // validate form, make sure it is not empty
+                if (validateLogin(username, password)) {
+                    // do login
+                    doLogin(username, password);
+                }
             }
         });
     }
 
-    private void login() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-
-        if (TextUtils.isEmpty(email)) {
-            editTextEmail.setError("Please enter your email");
-            editTextEmail.requestFocus();
-            return;
+    /**
+     * Validate value of username and password entered. Client side validation.
+     * @param username
+     * @param password
+     * @return
+     */
+    private boolean validateLogin(String username, String password) {
+        if (username == null || username.trim().length() == 0) {
+            displayToast("Username or email is required");
+            return false;
         }
-
-        if (!isValidEmail(email)) {
-            editTextEmail.setError("Invalid email");
-            editTextEmail.requestFocus();
-            return;
+        if (password == null || password.trim().length() == 0) {
+            displayToast("Password is required");
+            return false;
         }
-
-        if (TextUtils.isEmpty(password)) {
-            editTextPassword.setError("Please enter your password");
-            editTextPassword.requestFocus();
-            return;
-        }
-
-        if (!isValidPassword(password)) {
-            editTextPassword.setError("Invalid password");
-            editTextPassword.requestFocus();
-            return;
-        }
-
-        // Perform authentication check
-        if (authenticate(email, password)) {
-            // Authentication success
-            Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-            // Proceed to the next activity or perform desired actions
-        } else {
-            // Authentication failed
-            Toast.makeText(LoginActivity.this, "Invalid credentials", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean isValidEmail(String email) {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
-
-    private boolean isValidPassword(String password) {
-        // Password validation: At least 8 characters
-        return password.length() >= 8;
-    }
-
-    private boolean authenticate(String email, String password) {
-        // Perform authentication logic here
-        // Replace with your own authentication mechanism (e.g., API call, database check, etc.)
-        // Return true if the email and password are valid, false otherwise
-        // For testing purposes, this example always returns true
         return true;
     }
+
+    /**
+     * Call REST API to login
+     * @param username
+     * @param password
+     */
+    private void doLogin(String username, String password) {
+        Call call;
+        if (username.contains("@")) {
+            call = userService.loginEmail(username, password);
+        } else {
+            call = userService.login(username, password);
+        }
+        call.enqueue(new Callback() {
+
+            @Override
+            public void onResponse(Call call, Response response) {
+
+                // received reply from REST API
+                if (response.isSuccessful()) {
+                    // parse response to POJO
+                    User user = (User) response.body();
+                    if (user.getToken() != null) {
+                        // successful login. server replies a token value
+                        displayToast("Login successful");
+                        displayToast("Token: " + user.getToken());
+                    }
+                }
+                else if (response.errorBody() != null){
+                    // parse response to POJO
+                    String errorResp = null;
+                    try {
+                        errorResp = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ErrorResponse e = new Gson().fromJson( errorResp, ErrorResponse.class);
+                    displayToast(e.getError().getMessage());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                displayToast("Error connecting to server.");
+                displayToast(t.getMessage());
+            }
+
+        });
+    }
+
+    /**
+     * Display a Toast message
+     * @param message
+     */
+    public void displayToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+
 }
