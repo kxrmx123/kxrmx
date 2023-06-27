@@ -25,15 +25,6 @@
         android:textColor="@android:color/black"
         android:layout_marginTop="16dp" />
 
-    <!-- Signup Button -->
-    <Button
-        android:id="@+id/signup_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:textSize="18sp"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="32dp" />
 
     <!-- Login Button -->
     <Button
@@ -41,6 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Log In"
-        android:textSize="18sp"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 </LinearLayout>
