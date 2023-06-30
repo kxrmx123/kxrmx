@@ -1,11 +1,8 @@
 package com.example.recipehub.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-public class Recipe implements Parcelable{
-    private int recipeId;
-    private int userId;
+public class Recipe {
+    private int recipe_id; // Updated field name
+    private int user_id; // Updated field name
     private String title;
     private String description;
     private String ingredients;
@@ -15,29 +12,29 @@ public class Recipe implements Parcelable{
         // Default constructor
     }
 
-    public Recipe(int recipeId, int userId, String title, String description, String ingredients, String instructions) {
-        this.recipeId = recipeId;
-        this.userId = userId;
+    public Recipe(int recipe_id, int user_id, String title, String description, String ingredients, String instructions) {
+        this.recipe_id = recipe_id;
+        this.user_id = user_id;
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
         this.instructions = instructions;
     }
 
-    public int getRecipeId() {
-        return recipeId;
+    public int getRecipe_id() { // Updated getter method name
+        return recipe_id;
     }
 
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
+    public void setRecipe_id(int recipe_id) { // Updated setter method name
+        this.recipe_id = recipe_id;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUser_id() { // Updated getter method name
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUser_id(int user_id) { // Updated setter method name
+        this.user_id = user_id;
     }
 
     public String getTitle() {
@@ -72,41 +69,15 @@ public class Recipe implements Parcelable{
         this.instructions = instructions;
     }
 
-    // Implement Parcelable methods here
-
     @Override
-    public int describeContents() {
-        return 0;
+    public String toString() {
+        return "Recipe{" +
+                "recipe_id=" + recipe_id +
+                ", user_id=" + user_id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", ingredients='" + ingredients + '\'' +
+                ", instructions='" + instructions + '\'' +
+                '}';
     }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(recipeId);
-        dest.writeInt(userId);
-        dest.writeString(title);
-        dest.writeString(description);
-        dest.writeString(ingredients);
-        dest.writeString(instructions);
-    }
-
-    protected Recipe(Parcel in) {
-        recipeId = in.readInt();
-        userId = in.readInt();
-        title = in.readString();
-        description = in.readString();
-        ingredients = in.readString();
-        instructions = in.readString();
-    }
-
-    public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {
-        @Override
-        public Recipe createFromParcel(Parcel in) {
-            return new Recipe(in);
-        }
-
-        @Override
-        public Recipe[] newArray(int size) {
-            return new Recipe[size];
-        }
-    };
 }

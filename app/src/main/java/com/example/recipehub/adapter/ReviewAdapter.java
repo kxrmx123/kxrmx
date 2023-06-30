@@ -25,10 +25,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     private List<Review> reviews;
     private UserService userService;
+    private String apiKey;
 
-    public ReviewAdapter(List<Review> reviews, UserService userService) {
+    public ReviewAdapter(List<Review> reviews, UserService userService, String apiKey) {
         this.reviews = reviews;
         this.userService = userService;
+        this.apiKey = apiKey;
     }
 
     @NonNull
@@ -52,13 +54,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textViewUsername;
-        private RatingBar ratingBar;
+        private TextView textViewRating;
         private TextView textViewComment;
 
         public ReviewViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewUsername = itemView.findViewById(R.id.textViewUsername);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
+            textViewRating = itemView.findViewById(R.id.textViewRating);
             textViewComment = itemView.findViewById(R.id.textViewComment);
         }
 
@@ -66,14 +68,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             String userId = String.valueOf(review.getUserId());
 
             // Fetch the username based on the user ID
-            fetchUsername(userId);
+            fetchUsername(apiKey, userId);
 
-            ratingBar.setRating(review.getRating());
+            String ratingText = "Rating: " + review.getRating();
+            textViewRating.setText(ratingText);
             textViewComment.setText(review.getComment());
         }
 
-        private void fetchUsername(String userId) {
-            Call<User> call = userService.getUser(userId);
+        private void fetchUsername(String apiKey, String userId) {
+            Call<User> call = userService.getUser(apiKey, userId);
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {

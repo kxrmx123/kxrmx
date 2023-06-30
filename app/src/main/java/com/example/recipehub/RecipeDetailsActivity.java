@@ -1,6 +1,7 @@
 package com.example.recipehub;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.example.recipehub.remote.ApiUtils;
 import com.example.recipehub.remote.RecipeService;
 import com.example.recipehub.remote.ReviewService;
 import com.example.recipehub.remote.UserService;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -40,16 +42,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private String apiKey;
     private Recipe recipe;
 
+    private int recipeId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_details);
 
-        // Get the API key from the intent
-        Intent intent = getIntent();
-        apiKey = intent.getStringExtra("api_key");
-
-        // Get references to the UI elements
+        // Initialize views
         textViewAverageRating = findViewById(R.id.textViewAverageRating);
         textViewTitle = findViewById(R.id.textViewTitle);
         textViewDescription = findViewById(R.id.textViewDescription);
@@ -58,33 +58,43 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         buttonCreateReview = findViewById(R.id.buttonCreateReview);
         recyclerViewReviews = findViewById(R.id.recyclerViewReviews);
 
-        // Initialize the service instances
+        // Get the API key from the intent
+        Intent intent = getIntent();
+        apiKey = intent.getStringExtra("api_key");
+
+        // Initialize the recipeService and reviewService using ApiUtils
         recipeService = ApiUtils.getRecipeService();
         reviewService = ApiUtils.getReviewService();
-        userService = ApiUtils.getUserService();
 
-        // Get the recipe from the intent
-        recipe = (Recipe) intent.getSerializableExtra("recipe");
+        // Deserialize the Recipe object from JSON using Gson
+        Gson gson = new Gson();
+        String recipeJson = intent.getStringExtra("recipe_json");
+        recipe = gson.fromJson(recipeJson, Recipe.class);
 
         // Display the recipe attributes
         displayRecipeAttributes(recipe);
 
         // Load and display the reviews for the recipe
-        loadReviewsForRecipe(String.valueOf(recipe.getRecipeId()));
+        loadReviewsForRecipe(apiKey, recipe.getRecipe_id());
 
         // Set onClick action to the create review button
         buttonCreateReview.setOnClickListener(view -> navigateToCreateReviewPage());
     }
 
+
     private void displayRecipeAttributes(Recipe recipe) {
         textViewTitle.setText(recipe.getTitle());
         textViewDescription.setText(recipe.getDescription());
+        //textViewTitle.setText(Integer.toString(recipe.getRecipeId()));
+        //textViewDescription.setText(Integer.toString(recipe.getUserId()));
         textViewIngredients.setText(recipe.getIngredients());
         textViewInstructions.setText(recipe.getInstructions());
     }
 
-    private void loadReviewsForRecipe(String recipeId) {
-        reviewService.getReviewsByRecipeId(recipeId).enqueue(new Callback<List<Review>>() {
+
+
+    private void loadReviewsForRecipe(String apiKey, int recipeId) {
+        reviewService.getReviewsByRecipeId(apiKey, String.valueOf(recipeId)).enqueue(new Callback<List<Review>>() {
             @Override
             public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
                 if (response.isSuccessful()) {
@@ -110,7 +120,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private void displayReviews(List<Review> reviews) {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewReviews.setLayoutManager(layoutManager);
-        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews, userService);
+        ReviewAdapter reviewAdapter = new ReviewAdapter(reviews, userService, apiKey);
         recyclerViewReviews.setAdapter(reviewAdapter);
     }
 
@@ -134,9 +144,16 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
 
     private void navigateToCreateReviewPage() {
+        SharedPreferences sharedPreferences = getSharedPreferences("your_preference_name", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("user_id", "");
+
         Intent intent = new Intent(RecipeDetailsActivity.this, CreateReviewActivity.class);
         intent.putExtra("api_key", apiKey);
-        intent.putExtra("recipeId", recipe.getRecipeId());
+        intent.putExtra("recipeId", recipe.getRecipe_id());
+        intent.putExtra("recipeTitle", recipe.getTitle());
+        intent.putExtra("userId", userId);
+        Toast.makeText(this, "Recipeid: " + recipe.getRecipe_id(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "userid: " + userId, Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
 }

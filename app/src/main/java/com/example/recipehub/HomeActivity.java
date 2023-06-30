@@ -4,19 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.recipehub.model.Recipe;
 import com.example.recipehub.model.User;
 import com.example.recipehub.remote.ApiUtils;
 import com.example.recipehub.remote.RecipeService;
-import com.google.gson.Gson;
+import com.example.recipehub.remote.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,7 +28,8 @@ public class HomeActivity extends AppCompatActivity {
     Button btnLogout;
 
     RecipeService recipeService;
-    String apiKey;
+    UserService userService;
+    String apiKey, userId, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +39,17 @@ public class HomeActivity extends AppCompatActivity {
         // Get the API key from the previous activity
         Intent intent = getIntent();
         apiKey = intent.getStringExtra("api_key");
+        userId = intent.getStringExtra("user_id");
+        username = intent.getStringExtra("username");
 
-        // Initialize the RecipeService
+
+
+
+        // Initialize the RecipeService and UserService
         recipeService = ApiUtils.getRecipeService();
+        userService = ApiUtils.getUserService();
+
+
 
         // Get references to the form elements
         edtSearch = findViewById(R.id.editTextSearch);
@@ -60,11 +67,8 @@ public class HomeActivity extends AppCompatActivity {
                 if (searchQuery.isEmpty()) {
                     Toast.makeText(HomeActivity.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Pass the API key and search query to RecipeListActivity
-                    Intent intent = new Intent(HomeActivity.this, RecipeListActivity.class);
-                    intent.putExtra("api_key", apiKey);
-                    intent.putExtra("search_title", searchQuery);
-                    startActivity(intent);
+                    // Check the role of the user
+                    checkUserRole(searchQuery);
                 }
             }
         });
@@ -77,6 +81,61 @@ public class HomeActivity extends AppCompatActivity {
                 clearDataAndRestartApp();
             }
         });
+    }
+
+
+
+
+
+    private void checkUserRole(final String searchQuery) {
+        Call<List<User>> call = userService.getUserByName(apiKey, username); // Using getUserByName instead of getUser
+        call.enqueue(new Callback<List<User>>() { // Using List<User> as the response type
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    List<User> users = response.body(); // The response will be a list of users
+                    if (users != null && !users.isEmpty()) {
+                        User user = users.get(0); // Assuming the response contains only one user with the given userId
+                        Log.d("userer", user.toString());
+
+                        String roleName = user.getRole();
+                        if (roleName.equalsIgnoreCase("user")) {
+                            // If the role is user, go to RecipeListActivity
+                            goToRecipeListActivity(searchQuery);
+                        } else {
+                            // If the role is not user, go to RecipeListActivity2
+                            goToRecipeListActivity2(searchQuery);
+                        }
+                    } else {
+                        Toast.makeText(HomeActivity.this, "User not found.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(HomeActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void goToRecipeListActivity(String searchQuery) {
+        Intent intent = new Intent(HomeActivity.this, RecipeListActivity.class);
+        intent.putExtra("api_key", apiKey);
+        intent.putExtra("user_id", userId);
+        intent.putExtra("search_title", searchQuery);
+        startActivity(intent);
+    }
+
+    private void goToRecipeListActivity2(String searchQuery) {
+        Intent intent = new Intent(HomeActivity.this, RecipeListActivity.class);
+        intent.putExtra("api_key", apiKey);
+        intent.putExtra("user_id", userId);
+        intent.putExtra("search_title", searchQuery);
+        startActivity(intent);
     }
 
     private void clearDataAndRestartApp() {
@@ -96,6 +155,7 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
 }
+
 
 
 

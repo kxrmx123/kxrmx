@@ -24,6 +24,22 @@ public class User {
         this.password = password;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", token='" + token + '\'' +
+                ", lease='" + lease + '\'' +
+                ", role_name='" + role_name + '\'' +
+                ", role_permission='" + role_permission + '\'' +
+                ", is_active=" + is_active +
+                ", secret='" + secret + '\'' +
+                '}';
+    }
+
     public int getId() {
         return id;
     }

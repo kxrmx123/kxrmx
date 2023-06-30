@@ -11,8 +11,7 @@ public class Review {
         // Default constructor
     }
 
-    public Review(int reviewId, int recipeId, int userId, int rating, String comment) {
-        this.reviewId = reviewId;
+    public Review(int recipeId, int userId, int rating, String comment) {
         this.recipeId = recipeId;
         this.userId = userId;
         this.rating = rating;

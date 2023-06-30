@@ -2,6 +2,8 @@ package com.example.recipehub.remote;
 
 import com.example.recipehub.model.User;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -10,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UserService {
 
@@ -25,10 +28,10 @@ public interface UserService {
     @POST("api/users/login")
     Call<User> gettoken(@Header("api-key") String apiKey);
 
-    @POST("api/users")
-    Call<User> addUser(@Header("api-key") String apiKey, @Body User user);
-
     @GET("api/users/{userId}")
-    Call<User> getUser(@Path("userId") String userId);
+    Call<User> getUser(@Header("api-key") String apiKey, @Path("userId") String userId);
+
+    @GET("api/users/")
+    Call<List<User>> getUserByName(@Header("api-key") String apiKey, @Query("username[in]=") String username );
 
 }

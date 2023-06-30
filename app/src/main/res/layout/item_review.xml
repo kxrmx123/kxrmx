@@ -13,13 +13,13 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
-    <RatingBar
-        android:id="@+id/ratingBar"
+    <TextView
+        android:id="@+id/textViewRating"
         android:layout_width="wrap_content"
-        android:layout_height="47dp"
-        android:numStars="5"
-        android:rating="4"
-        android:stepSize="1" />
+        android:layout_height="wrap_content"
+        android:text="Rating: 4"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textViewComment"
