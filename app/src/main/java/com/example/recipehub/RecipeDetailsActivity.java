@@ -3,6 +3,7 @@ package com.example.recipehub;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,7 +40,7 @@ public class RecipeDetailsActivity extends AppCompatActivity {
     private RecipeService recipeService;
     private ReviewService reviewService;
     private UserService userService;
-    private String apiKey;
+    private String apiKey, userId;
     private Recipe recipe;
 
     private int recipeId;
@@ -61,10 +62,12 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         // Get the API key from the intent
         Intent intent = getIntent();
         apiKey = intent.getStringExtra("api_key");
+        userId = intent.getStringExtra("user_id");
 
-        // Initialize the recipeService and reviewService using ApiUtils
+        // Initialize the recipeService, reviewService, and userService using ApiUtils
         recipeService = ApiUtils.getRecipeService();
         reviewService = ApiUtils.getReviewService();
+        userService = ApiUtils.getUserService(); // Add this line to initialize the userService
 
         // Deserialize the Recipe object from JSON using Gson
         Gson gson = new Gson();
@@ -75,11 +78,13 @@ public class RecipeDetailsActivity extends AppCompatActivity {
         displayRecipeAttributes(recipe);
 
         // Load and display the reviews for the recipe
+        //Log.d("recipeid", String.valueOf(recipe.getRecipe_id()));
         loadReviewsForRecipe(apiKey, recipe.getRecipe_id());
 
         // Set onClick action to the create review button
         buttonCreateReview.setOnClickListener(view -> navigateToCreateReviewPage());
     }
+
 
 
     private void displayRecipeAttributes(Recipe recipe) {
@@ -144,16 +149,14 @@ public class RecipeDetailsActivity extends AppCompatActivity {
 
 
     private void navigateToCreateReviewPage() {
-        SharedPreferences sharedPreferences = getSharedPreferences("your_preference_name", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("user_id", "");
 
         Intent intent = new Intent(RecipeDetailsActivity.this, CreateReviewActivity.class);
         intent.putExtra("api_key", apiKey);
-        intent.putExtra("recipeId", recipe.getRecipe_id());
+        intent.putExtra("recipeId", String.valueOf(recipe.getRecipe_id()));
         intent.putExtra("recipeTitle", recipe.getTitle());
         intent.putExtra("userId", userId);
-        Toast.makeText(this, "Recipeid: " + recipe.getRecipe_id(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "userid: " + userId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Recipeid: " + recipe.getRecipe_id(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "userid: " + userId, Toast.LENGTH_SHORT).show();
         startActivity(intent);
     }
 }

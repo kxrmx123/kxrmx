@@ -1,5 +1,6 @@
 package com.example.recipehub.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
     @Override
     public void onBindViewHolder(@NonNull ReviewViewHolder holder, int position) {
         Review review = reviews.get(position);
+        //Log.d("onbindviewreview", review.toString());
         holder.bind(review);
     }
 
@@ -66,6 +68,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
         public void bind(Review review) {
             String userId = String.valueOf(review.getUserId());
+            //Log.d("bindapi", apiKey);
 
             // Fetch the username based on the user ID
             fetchUsername(apiKey, userId);
@@ -76,6 +79,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
         }
 
         private void fetchUsername(String apiKey, String userId) {
+            //Log.d("fetchapi", apiKey);
+            //Log.d("fetchuserid", userId);
+
             Call<User> call = userService.getUser(apiKey, userId);
             call.enqueue(new Callback<User>() {
                 @Override

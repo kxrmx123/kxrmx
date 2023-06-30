@@ -1,9 +1,9 @@
 package com.example.recipehub.model;
 
 public class Review {
-    private int reviewId;
-    private int recipeId;
-    private int userId;
+    private int review_id;
+    private int recipe_id;
+    private int user_id;
     private int rating;
     private String comment;
 
@@ -11,35 +11,35 @@ public class Review {
         // Default constructor
     }
 
-    public Review(int recipeId, int userId, int rating, String comment) {
-        this.recipeId = recipeId;
-        this.userId = userId;
+    public Review(int recipe_id, int user_id, int rating, String comment) {
+        this.recipe_id = recipe_id;
+        this.user_id = user_id;
         this.rating = rating;
         this.comment = comment;
     }
 
     public int getReviewId() {
-        return reviewId;
+        return review_id;
     }
 
-    public void setReviewId(int reviewId) {
-        this.reviewId = reviewId;
+    public void setReviewId(int review_id) {
+        this.review_id = review_id;
     }
 
     public int getRecipeId() {
-        return recipeId;
+        return recipe_id;
     }
 
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
+    public void setRecipeId(int recipe_id) {
+        this.recipe_id = recipe_id;
     }
 
     public int getUserId() {
-        return userId;
+        return user_id;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserId(int user_id) {
+        this.user_id = user_id;
     }
 
     public int getRating() {
@@ -57,5 +57,15 @@ public class Review {
     public void setComment(String comment) {
         this.comment = comment;
     }
-}
 
+    @Override
+    public String toString() {
+        return "Review{" +
+                "review_id=" + review_id +
+                ", recipe_id=" + recipe_id +
+                ", user_id=" + user_id +
+                ", rating=" + rating +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
+}

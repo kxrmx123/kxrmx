@@ -25,6 +25,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+
 public class RecipeListActivity extends AppCompatActivity implements RecipeAdapter.RecipeClickListener, RecipeAdapter.RecipeLongClickListener {
 
     private RecyclerView recyclerView;
@@ -38,6 +40,11 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
     private String searchTitle;
 
     private User user;
+
+    public UserService getUserService() {
+        return userService;
+    }
+
 
 
     @Override
@@ -60,6 +67,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
         // Get the API key and search title from the intent
         apiKey = intent.getStringExtra("api_key");
         userId = intent.getStringExtra("user_id");
+        Log.d("Userid", userId);
         searchTitle = intent.getStringExtra("search_title");
 
         searchRecipes(apiKey, searchTitle);
@@ -73,7 +81,6 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
                 if (response.isSuccessful()) {
                     List<Recipe> recipes = response.body();
-                    Log.d("mytag", recipes.toString());
                     if (recipes != null && !recipes.isEmpty()) {
                         recipeAdapter.setRecipes(recipes);
                     } else {
@@ -145,17 +152,11 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
 
     private void showOptionsDialog( Recipe recipe) {
         if (user.getPermission().equalsIgnoreCase("user")) {
-            Gson gson = new Gson();
-            String recipeJson = gson.toJson(recipe);
-            Toast.makeText(RecipeListActivity.this, recipe.toString(), Toast.LENGTH_LONG).show();
 
         }
 
         else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            Gson gson = new Gson();
-            String recipeJson = gson.toJson(recipe);
-            builder.setTitle(recipeJson);
             builder.setItems(R.array.recipe_options, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     switch (which) {
@@ -190,8 +191,6 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
 
     private void deleteRecipe(final Recipe recipe) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        Toast.makeText(RecipeListActivity.this, "Recipeid: " + recipe.getRecipe_id(), Toast.LENGTH_SHORT).show();
-
         builder.setTitle("Confirm Deletion")
                 .setMessage("Are you sure you want to delete this recipe?")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
