@@ -159,6 +159,7 @@ public class CreateReviewActivity extends AppCompatActivity {
         intent.putExtra("user_id", userId);
         intent.putExtra("username", username);
         startActivity(intent);
+        finish();
     }
 
 }

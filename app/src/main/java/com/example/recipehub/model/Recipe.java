@@ -12,8 +12,7 @@ public class Recipe {
         // Default constructor
     }
 
-    public Recipe(int recipe_id, int user_id, String title, String description, String ingredients, String instructions) {
-        this.recipe_id = recipe_id;
+    public Recipe(int user_id, String title, String description, String ingredients, String instructions) {
         this.user_id = user_id;
         this.title = title;
         this.description = description;

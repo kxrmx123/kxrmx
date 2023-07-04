@@ -23,7 +23,7 @@ public class PreHomeActivity2 extends AppCompatActivity {
     private Button buttonAddRecipe, buttonUpdateDeleteRecipe;
     private UserService userService;
 
-    private String apiKey, userId;
+    private String apiKey, userId, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +33,8 @@ public class PreHomeActivity2 extends AppCompatActivity {
         Intent intent = getIntent();
         apiKey = intent.getStringExtra("api_key");
         userId = intent.getStringExtra("user_id");
+        username = intent.getStringExtra("username");
+
 
         textViewWelcome = findViewById(R.id.textViewWelcome);
         buttonAddRecipe = findViewById(R.id.buttonAddRecipe);
@@ -48,6 +50,8 @@ public class PreHomeActivity2 extends AppCompatActivity {
                 Intent addRecipeIntent = new Intent(PreHomeActivity2.this, AddRecipeActivity.class);
                 addRecipeIntent.putExtra("api_key", apiKey);
                 addRecipeIntent.putExtra("user_id", userId);
+                addRecipeIntent.putExtra("username", username);
+
                 startActivity(addRecipeIntent);
             }
         });
@@ -58,6 +62,8 @@ public class PreHomeActivity2 extends AppCompatActivity {
                 Intent updateDeleteRecipeIntent = new Intent(PreHomeActivity2.this, HomeActivity.class);
                 updateDeleteRecipeIntent.putExtra("api_key", apiKey);
                 updateDeleteRecipeIntent.putExtra("user_id", userId);
+                updateDeleteRecipeIntent.putExtra("username", username);
+
                 startActivity(updateDeleteRecipeIntent);
             }
         });

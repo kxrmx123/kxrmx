@@ -123,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, PreHomeActivity2.class);
                             intent.putExtra("api_key", user.getToken());
                             intent.putExtra("user_id", String.valueOf(user.getId()));
+                            intent.putExtra("username", user.getUsername());
 
 
                             startActivity(intent);

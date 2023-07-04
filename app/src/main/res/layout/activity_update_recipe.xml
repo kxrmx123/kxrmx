@@ -1,9 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout3"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UpdateRecipeActivity">
+    android:padding="16dp">
+
+    <!-- Title -->
+
+    <!-- Description -->
+
+    <TextView
+        android:id="@+id/textViewHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Update the recipe here!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTitleLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="84dp"
+        android:text="Title:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewHeader" />
+
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="270dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:hint="Enter the title here"
+        android:inputType="text"
+        app:layout_constraintLeft_toRightOf="@id/textViewTitleLabel"
+        app:layout_constraintStart_toEndOf="@id/textViewTitleLabel"
+        app:layout_constraintTop_toBottomOf="@id/textViewHeader" />
+
+    <TextView
+        android:id="@+id/textViewDescriptionLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Description:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextTitle" />
+
+    <!-- Ingredients -->
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="267dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:hint="Enter the description here"
+        android:inputType="text"
+        app:layout_constraintLeft_toRightOf="@id/textViewDescriptionLabel"
+        app:layout_constraintStart_toEndOf="@id/textViewDescriptionLabel"
+        app:layout_constraintTop_toBottomOf="@id/editTextTitle" />
+
+    <!-- Instructions -->
+
+    <TextView
+        android:id="@+id/textViewIngredientsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:text="Ingredients:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextDescription" />
+
+    <EditText
+        android:id="@+id/editTextIngredients"
+        android:layout_width="270dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:hint="Enter the ingredients here"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        app:layout_constraintLeft_toRightOf="@id/textViewIngredientsLabel"
+        app:layout_constraintStart_toEndOf="@id/textViewIngredientsLabel"
+        app:layout_constraintTop_toBottomOf="@id/editTextDescription" />
+
+    <!-- Clear Button -->
+
+    <TextView
+        android:id="@+id/textViewInstructionsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:text="Instructions:"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextIngredients" />
+
+    <EditText
+        android:id="@+id/editTextInstructions"
+        android:layout_width="263dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="72dp"
+        android:hint="Enter the instructions here"
+        android:inputType="textMultiLine"
+        android:minLines="5"
+        app:layout_constraintLeft_toRightOf="@id/textViewInstructionsLabel"
+        app:layout_constraintStart_toEndOf="@id/textViewInstructionsLabel"
+        app:layout_constraintTop_toBottomOf="@id/editTextIngredients" />
+
+    <!-- Update Button -->
+
+    <Button
+        android:id="@+id/buttonClear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:backgroundTint="#F44336"
+        android:text="Clear"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextInstructions" />
+
+    <Button
+        android:id="@+id/buttonUpdate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Update"
+        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/buttonClear" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
