@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // get username and password entered by user
+
                 String username = edtUsername.getText().toString();
                 String password = edtPassword.getText().toString();
 

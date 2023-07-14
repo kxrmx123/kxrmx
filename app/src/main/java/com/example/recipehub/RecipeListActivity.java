@@ -2,6 +2,7 @@ package com.example.recipehub;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -79,6 +80,8 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
 
         searchRecipes(apiKey, searchTitle);
         getUserRoleName(userId);
+
+
     }
 
     private void searchRecipes(String apiKey, String searchTitle) {
@@ -158,7 +161,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
     }
 
     private void showOptionsDialog( Recipe recipe) {
-        if (!user.getPermission().equalsIgnoreCase("user"))
+        if (!user.getRole().equalsIgnoreCase("user"))
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setItems(R.array.recipe_options, new DialogInterface.OnClickListener() {
@@ -206,6 +209,7 @@ public class RecipeListActivity extends AppCompatActivity implements RecipeAdapt
                         showDeleteReviewsAlertDialog(recipe, reviews);
                     } else {
                         // If there are no reviews for the recipe, show AlertDialog to confirm recipe deletion
+                        showConfirmRecipeDeletionAlertDialog(recipe);
 
                     }
                 } else {
